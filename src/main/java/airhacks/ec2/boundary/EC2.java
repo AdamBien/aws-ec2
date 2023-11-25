@@ -1,6 +1,7 @@
 package airhacks.ec2.boundary;
 
 import airhacks.vpc.boundary.VPCStack;
+import software.amazon.awscdk.services.ec2.IVpc;
 import software.constructs.Construct;
 
 /**
@@ -11,8 +12,15 @@ public class EC2 {
     private EC2(Builder builder) {
         var scope = builder.scope;
         var appName = builder.appName;
-        var vpcStack = new VPCStack(scope,appName);
-        new EC2Stack(scope,appName,vpcStack.getVPC());
+        IVpc vpc = null;
+
+        if(builder.newVPC){
+            var vpcStack = new VPCStack(scope,appName);
+            vpc = vpcStack.getVPC();
+        }else{
+            vpc = VPCStack.fetchExisting(scope,builder.vpcId);
+        }
+        new EC2Stack(scope,appName,vpc);
     }
 
     public static class Builder {
