@@ -2,9 +2,11 @@ package airhacks.ec2.boundary;
 
 import java.util.List;
 
+import airhacks.Configuration;
 import airhacks.vpc.boundary.VPCStack;
 import software.amazon.awscdk.CfnOutput;
 import software.amazon.awscdk.Stack;
+import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.ec2.IVpc;
 import software.amazon.awscdk.services.ec2.Instance;
 import software.amazon.awscdk.services.ec2.InstanceClass;
@@ -24,14 +26,49 @@ import software.constructs.Construct;
 
 public class EC2Stack extends Stack {
 
-        public EC2Stack(final Construct scope, String appName, IVpc vpc) {
-                super(scope, appName);
-                this.init(vpc);
-        }
+        public static class Builder {
+                boolean newVPC;
+                String vpcId;
+                String appName;
+                Construct scope;
+                String accountId;
+                String region;
+        
+                public Builder(Construct construct,String appName) {
+                    this.scope = construct;
+                    this.appName = appName;
+                }
+            
+                public Builder withNewVPC() {
+                    this.newVPC = true;
+                    return this;
+                }
+        
+                public Builder vpcId(String region,String accountId,String vpcId) {
+                    this.region = region;
+                    this.accountId = accountId;
+                    this.vpcId = vpcId;
+                    return this;
+                }
+                
+                public EC2Stack build() {
+                    if(!newVPC && vpcId == null){
+                        throw new RuntimeException("vpcId is required for existing VPC",null,false,false){};
+                    }
+                    return new EC2Stack(this);
+                }
+            }
 
-        public EC2Stack(final Construct scope, String appName, String vpcId) {
-                super(scope, appName);
-                var vpc = VPCStack.fetchExisting(this, vpcId);
+
+        public EC2Stack(Builder builder) {
+                super(builder.scope, builder.appName,Configuration.stackProperties(builder.region,builder.accountId));
+                IVpc vpc = null;
+                if(builder.newVPC){
+                        var vpcStack = new VPCStack(this, builder.appName);
+                        vpc = vpcStack.getVPC();
+                }else{
+                        vpc = VPCStack.fetchExisting(this, builder.accountId,builder.vpcId);
+                }
                 this.init(vpc);
         }
 
@@ -92,5 +129,6 @@ public class EC2Stack extends Stack {
                                                 ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore")))
                                 .build();
         }
+
 
 }

@@ -2,6 +2,7 @@ package airhacks.vpc.boundary;
 
 import java.util.List;
 
+import software.amazon.awscdk.NestedStack;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.Tags;
 import software.amazon.awscdk.services.ec2.IVpc;
@@ -14,7 +15,7 @@ import software.amazon.awscdk.services.ec2.Vpc;
 import software.amazon.awscdk.services.ec2.VpcLookupOptions;
 import software.constructs.Construct;
 
-public class VPCStack extends Stack {
+public class VPCStack extends NestedStack {
 
         private Vpc vpc;
 
@@ -55,10 +56,11 @@ public class VPCStack extends Stack {
                                 .build());
         }
 
-        public static IVpc fetchExisting(Construct scope, String vpcId) {
+        public static IVpc fetchExisting(Construct scope, String account,String vpcId) {
                 var vpc =  Vpc.fromLookup(scope, "vpc", VpcLookupOptions
                                 .builder()
                                 .vpcId(vpcId)
+                                .ownerAccountId(account)
                                 .build());
                 addEndpoints(vpc);
                 return vpc;

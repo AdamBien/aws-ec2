@@ -1,8 +1,6 @@
 package airhacks;
 
-import airhacks.ec2.boundary.EC2;
 import airhacks.ec2.boundary.EC2Stack;
-import airhacks.vpc.boundary.VPCStack;
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Tags;
 
@@ -22,10 +20,9 @@ public class CDKApp {
             Tags.of(app).add("environment","development");
             Tags.of(app).add("application", appName);
 
-            new EC2.Builder(app,appName)
+            new EC2Stack.Builder(app,appName)
                     .withNewVPC()
                     .build();
-
         app.synth();
     }
 }
