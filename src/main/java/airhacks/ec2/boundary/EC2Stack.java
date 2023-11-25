@@ -2,6 +2,7 @@ package airhacks.ec2.boundary;
 
 import java.util.List;
 
+import airhacks.vpc.boundary.VPCStack;
 import software.amazon.awscdk.CfnOutput;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.services.ec2.IVpc;
@@ -24,7 +25,17 @@ import software.constructs.Construct;
 public class EC2Stack extends Stack {
 
         public EC2Stack(final Construct scope, String appName, IVpc vpc) {
-                super(scope, appName + "-ec2");
+                super(scope, appName);
+                this.init(vpc);
+        }
+
+        public EC2Stack(final Construct scope, String appName, String vpcId) {
+                super(scope, appName);
+                var vpc = VPCStack.fetchExisting(this, vpcId);
+                this.init(vpc);
+        }
+
+        void init(IVpc vpc) {
                 var role = createRoleForSessionManager();
                 // https://docs.aws.amazon.com/systems-manager/latest/userguide/agent-install-al2.html
                 var userData = UserData.forLinux();
