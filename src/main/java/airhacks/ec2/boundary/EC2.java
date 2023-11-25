@@ -8,7 +8,7 @@ import software.constructs.Construct;
  */
 public class EC2 {
 
-    public EC2(Builder builder) {
+    private EC2(Builder builder) {
         var scope = builder.scope;
         var appName = builder.appName;
         var vpcStack = new VPCStack(scope,appName);
@@ -17,6 +17,7 @@ public class EC2 {
 
     public static class Builder {
         boolean newVPC;
+        String vpcId;
         String appName;
         Construct scope;
 
@@ -29,8 +30,16 @@ public class EC2 {
             this.newVPC = newVPC;
             return this;
         }
+
+        public Builder vpcId(String vpcId) {
+            this.vpcId = vpcId;
+            return this;
+        }
         
         public EC2 build() {
+            if(!newVPC && vpcId == null){
+                throw new IllegalStateException("vpcId is required for existing VPC");
+            }
             return new EC2(this);
         }
     }
