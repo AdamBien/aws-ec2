@@ -26,8 +26,8 @@ public class EC2 {
             this.appName = appName;
         }
     
-        public Builder newVPC(boolean newVPC) {
-            this.newVPC = newVPC;
+        public Builder withNewVPC() {
+            this.newVPC = true;
             return this;
         }
 
@@ -38,7 +38,7 @@ public class EC2 {
         
         public EC2 build() {
             if(!newVPC && vpcId == null){
-                throw new IllegalStateException("vpcId is required for existing VPC");
+                throw new RuntimeException("vpcId is required for existing VPC",null,false,false){};
             }
             return new EC2(this);
         }

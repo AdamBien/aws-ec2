@@ -23,7 +23,7 @@ public class CDKApp {
             Tags.of(app).add("application", appName);
 
             new EC2.Builder(app,appName)
-                    .newVPC(true)
+                    .withNewVPC()
                     .build();
 
         app.synth();
