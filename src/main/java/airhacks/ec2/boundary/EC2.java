@@ -17,10 +17,11 @@ public class EC2 {
         if(builder.newVPC){
             var vpcStack = new VPCStack(scope,appName);
             vpc = vpcStack.getVPC();
+            new EC2Stack(scope,appName,vpc);
         }else{
-            vpc = VPCStack.fetchExisting(scope,builder.vpcId);
+            new EC2Stack(scope,appName,builder.vpcId);
         }
-        new EC2Stack(scope,appName,vpc);
+        
     }
 
     public static class Builder {
