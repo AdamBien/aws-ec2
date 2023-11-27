@@ -12,7 +12,7 @@ public class CDKApp {
     public static void main(final String[] args) {
 
             var app = new App();
-            var appName = "ec2";
+            var appName = "ec2-app";
             Tags.of(app).add("project", "powered by: airhacks.live");
             Tags.of(app).add("environment","development");
             Tags.of(app).add("application", appName);
