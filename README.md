@@ -1,6 +1,6 @@
-# Slightly Streamlined AWS Cloud Development Kit (CDK) Boilerplate
+# EC2 with SSM for deployment into a new, or exising VPC
 
-This is a blank, slightly streamlined, project for [Java development with AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/work-with-cdk-java.html).
+This is a blank, slightly streamlined, project for [EC2 provisioning with AWS CDKv2](https://docs.aws.amazon.com/cdk/latest/guide/work-with-cdk-java.html).
 
 You will find the maven command in `cdk.json` file.
 

@@ -8,9 +8,6 @@ import software.amazon.awscdk.Tags;
 
 public class CDKApp {
     
-    static class Builder{
-
-    }
 
     public static void main(final String[] args) {
 
